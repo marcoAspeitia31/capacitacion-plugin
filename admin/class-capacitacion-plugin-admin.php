@@ -52,6 +52,12 @@ class Capacitacion_Plugin_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		$this->load_dependencies();
+
+	}
+
+	public function load_dependencies() {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/custom-fields/front-page-fields.php';
 	}
 
 	/**
