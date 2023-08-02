@@ -104,6 +104,7 @@ class Capacitacion_Plugin {
 		 * core plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-capacitacion-plugin-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/cmb2-functions.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
