@@ -54,6 +54,8 @@ class Capacitacion_Plugin_Admin {
 
 		$this->load_dependencies();
 
+		add_action( 'rest_api_init', array( $this, 'cp_post_new_rest_fields' ) );
+
 	}
 
 	public function load_dependencies() {
@@ -103,6 +105,66 @@ class Capacitacion_Plugin_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/capacitacion-plugin-admin.js', array( 'jquery' ), $this->version, false );
+
+	}
+
+	/**
+	 * Register custom fields in the WP REST API v2
+	 * 
+	 * @since 1.0.0
+	 * @link https://developer.wordpress.org/reference/functions/register_rest_field/
+	 */
+	public function cp_post_new_rest_fields(){
+
+		register_rest_field( 
+			array( 'post' ),
+			'featured_image_src',
+			array(
+				'get_callback' 		=> array( $this, 'cp_get_featured_image_src' ),
+				'update_callback'   => null,
+				'schema'			=> null
+			)
+		);
+
+		register_rest_field(
+			'post',
+			'categories_names',
+			array(
+				'get_callback' 		=> array( $this, 'cp_get_categories_names' ),
+				'update_callback'	=> null,
+				'schema'			=> null
+			)
+		);
+
+	}
+
+	// Get the image src
+	public function cp_get_featured_image_src( $object ) {
+
+		if( $object['featured_media'] ) {
+
+			$field = wp_get_attachment_image_src( $object['featured_media'], 'thumbnail', false );
+
+			return $field[0];
+
+		}
+
+		return false;
+
+	}
+
+	// Get the categories names
+	public function cp_get_categories_names( $array ) {
+
+		$categories_names = array();
+
+		$categories = get_the_terms( $array[ 'id' ], 'category' );
+
+		foreach( $categories as $category ) {
+			array_push($categories_names, $category->name);
+		}
+
+		return $categories_names;
 
 	}
 
